@@ -35,6 +35,28 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUnsupportedOp(UserNotFoundException ex) {
+        Map<String, Object> errorBody = new HashMap<>();
+        errorBody.put("status", 400);
+        errorBody.put("timestamp", LocalDateTime.now());
+        errorBody.put("error", "User not found");
+        errorBody.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserIdMismatchException.class)
+    public ResponseEntity<Object> handleBookIdMismatch(UserIdMismatchException ex) {
+        Map<String, Object> errorBody = new HashMap<>();
+        errorBody.put("status", 400);
+        errorBody.put("timestamp", LocalDateTime.now());
+        errorBody.put("error", "User ID Mismatch");
+        errorBody.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(BookAlreadyOwnedException.class)
     public ResponseEntity<Object> handleBookIdMismatch(BookAlreadyOwnedException ex) {
         Map<String, Object> errorBody = new HashMap<>();
