@@ -37,8 +37,8 @@ public class Book {
     @Column(nullable = false)
     private String isbn;
 
-//    @ManyToMany(mappedBy = "books")
-//    private List<User> users;
+    @ManyToMany(mappedBy = "books")
+    private List<User> users;
 
     // Constructor requerido por JPA
     protected Book() {}
