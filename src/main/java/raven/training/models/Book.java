@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+/**
+ * Representa un libro dentro del sistema.
+ * Cada libro contiene información bibliográfica y puede estar asociado a múltiples usuarios.
+ */
 @Entity
 public class Book {
 
@@ -40,10 +44,24 @@ public class Book {
     @ManyToMany(mappedBy = "books")
     private List<User> users;
 
-    // Constructor requerido por JPA
+    /**
+     * Constructor protegido requerido por JPA.
+     */
     protected Book() {}
 
-    // Constructor útil para creacion manual
+    /**
+     * Constructor para crear una instancia manual de Book.
+     *
+     * @param genre     Género del libro.
+     * @param author    Autor del libro.
+     * @param image     URL o nombre de archivo de la imagen de portada.
+     * @param title     Título principal del libro.
+     * @param subtitle  Subtítulo del libro.
+     * @param publisher Editorial del libro.
+     * @param year      Año de publicación.
+     * @param pages     Número de páginas.
+     * @param isbn      Código ISBN del libro.
+     */
     public Book(String genre, String author, String image, String title, String subtitle,
                 String publisher, String year, Integer pages, String isbn) {
         this.genre = genre;

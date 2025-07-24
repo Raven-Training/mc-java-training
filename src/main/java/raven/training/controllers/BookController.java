@@ -1,8 +1,7 @@
 package raven.training.controllers;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import raven.training.models.Book;
 import raven.training.repositories.BookRepository;
@@ -11,6 +10,10 @@ import raven.training.exceptions.BookNotFoundException;
 
 import java.util.List;
 
+/**
+ * Controlador REST para gestionar operaciones CRUD sobre libros.
+ * Proporciona endpoints para listar, obtener, crear, actualizar y eliminar libros.
+ */
 @RestController
 @RequestMapping("/books")
 public class BookController {
@@ -18,29 +21,63 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
+    /**
+     * Obtiene la lista de todos los libros disponibles.
+     *
+     * @return una lista de libros.
+     */
     @GetMapping
-    public List findAll() {
+    public List<Book> findAll() {
         return bookRepository.findAll();
     }
 
+    /**
+     * Busca un libro por su autor.
+     *
+     * @param author el nombre del autor.
+     * @throws BookNotFoundException si no se encuentra el libro con el ID dado.
+     * @return el libro correspondiente al autor proporcionado.
+     */
     @GetMapping("/author/{author}")
     public Book findByAuthor(@PathVariable String author) {
-
-        return bookRepository.findByAuthor(author);
+        Book book = bookRepository.findByAuthor(author);
+        if (book == null) {
+            throw new BookNotFoundException("Book not found with author: " + author);
+        }
+        return book;
     }
 
+    /**
+     * Obtiene un libro por su ID.
+     *
+     * @param id el ID del libro a buscar.
+     * @return el libro correspondiente al ID.
+     * @throws BookNotFoundException si no se encuentra el libro con el ID dado.
+     */
     @GetMapping("/{id}")
     public Book findOne(@PathVariable Long id) {
         return bookRepository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
     }
 
+    /**
+     * Crea un nuevo libro en el sistema.
+     *
+     * @param book el libro a crear.
+     * @return el libro creado.
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Book create(@RequestBody Book book) {
         return bookRepository.save(book);
     }
 
+    /**
+     * Elimina un libro por su ID.
+     *
+     * @param id el ID del libro a eliminar.
+     * @throws BookNotFoundException si no se encuentra el libro con el ID dado.
+     */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         bookRepository.findById(id)
@@ -48,6 +85,15 @@ public class BookController {
         bookRepository.deleteById(id);
     }
 
+    /**
+     * Actualiza un libro existente.
+     *
+     * @param book el libro actualizado.
+     * @param id el ID del libro a actualizar.
+     * @return el libro actualizado.
+     * @throws BookIdMismatchException si el ID del libro no coincide con el ID de la ruta.
+     * @throws BookNotFoundException si no se encuentra el libro con el ID dado.
+     */
     @PutMapping("/{id}")
     public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
         if (book.getId() != id) {
