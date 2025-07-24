@@ -1,5 +1,6 @@
 package raven.training.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import raven.training.exceptions.UserNotFoundException;
  * Este endpoint se usa como parte de la tarjeta de presentación.
  */
 @Controller
+@Tag(name = "Greeting", description = "Operaciones relacionadas con los usuarios del sistema")
 public class GreetingController {
 
     /**
