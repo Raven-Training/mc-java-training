@@ -1,5 +1,9 @@
 package raven.training.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +22,7 @@ import java.util.List;
  * Proporciona endpoints para consultar, crear, actualizar y eliminar usuarios,
  * así como para asociar o desasociar libros a un usuario.
  */
+@Tag(name = "Usuarios", description = "Operaciones relacionadas con los usuarios del sistema")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -35,6 +40,11 @@ public class UserController {
      * @return El usuario correspondiente si existe.
      * @throws UserNotFoundException si no se encuentra el usuario.
      */
+    @Operation(summary = "Buscar usuario por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
     @GetMapping("/{id}")
     public User findOne(@PathVariable Long id) {
         return userRepository.findById(id)
@@ -47,6 +57,11 @@ public class UserController {
      * @param userName Nombre del usuario a buscar.
      * @return El usuario correspondiente, o null si no existe.
      */
+    @Operation(summary = "Buscar usuario por nombre de usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado"),
+            @ApiResponse(responseCode = "404", description = "User not found with username")
+    })
     @GetMapping("/username/{userName}")
     public User findByUserName(@PathVariable String userName) {
 
@@ -63,6 +78,10 @@ public class UserController {
      * @param user Objeto usuario a guardar.
      * @return El usuario creado con su ID asignado.
      */
+    @Operation(summary = "Crear un nuevo usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Usuario creado exitosamente")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
@@ -75,6 +94,11 @@ public class UserController {
      * @param id ID del usuario a eliminar.
      * @throws UserNotFoundException si el usuario no existe.
      */
+    @Operation(summary = "Eliminar un usuario por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario eliminado"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         userRepository.findById(id)
@@ -91,6 +115,12 @@ public class UserController {
      * @throws UserIdMismatchException si el ID del path no coincide con el del objeto usuario.
      * @throws UserNotFoundException   si el usuario no existe.
      */
+    @Operation(summary = "Actualizar un usuario existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuario actualizado"),
+            @ApiResponse(responseCode = "400", description = "ID no coincide"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
     @PutMapping("/{id}")
     public User updateUser(@RequestBody User user, @PathVariable Long id) {
         if (user.getId() != id) {
@@ -110,6 +140,11 @@ public class UserController {
      * @throws UserNotFoundException si el usuario no existe.
      * @throws BookNotFoundException si el libro no existe.
      */
+    @Operation(summary = "Asociar un libro a un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Libro asociado al usuario"),
+            @ApiResponse(responseCode = "404", description = "Usuario o libro no encontrado")
+    })
     @PutMapping("/{userId}/books/{bookId}")
     public User addBookToUser(@PathVariable Long userId, @PathVariable Long bookId) {
         User user = userRepository.findById(userId)
@@ -129,6 +164,11 @@ public class UserController {
      * @throws UserNotFoundException si el usuario no existe.
      * @throws BookNotFoundException si el libro no existe.
      */
+    @Operation(summary = "Desasociar un libro de un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Libro desasociado del usuario"),
+            @ApiResponse(responseCode = "404", description = "Usuario o libro no encontrado")
+    })
     @DeleteMapping("/{userId}/books/{bookId}")
     public User removeBookFromUser(@PathVariable Long userId, @PathVariable Long bookId) {
         User user = userRepository.findById(userId)
