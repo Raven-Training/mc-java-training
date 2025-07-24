@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import raven.training.exceptions.BookAlreadyOwnedException;
 
@@ -15,18 +16,23 @@ import raven.training.exceptions.BookAlreadyOwnedException;
  */
 @Entity
 @Table(name = "users")
+@Schema(description = "Entidad que representa un usuario del sistema.")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Schema(description = "Identificador único del usuario", example = "1")
     private Long id;
 
+    @Schema(description = "Nombre de usuario único", example = "miguel123")
     private String userName;
 
     @Column(nullable = false)
+    @Schema(description = "Nombre completo del usuario", example = "Miguel Ángel Castaño")
     private String name;
 
     @Column(nullable = false)
+    @Schema(description = "Fecha de nacimiento del usuario", example = "1999-07-24", type = "string", format = "date")
     private LocalDate birthDate;
 
     @ManyToMany
@@ -35,6 +41,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
+    @Schema(description = "Lista de libros asociados al usuario")
     private List<Book> books = new ArrayList<>();
 
 
