@@ -34,6 +34,21 @@ public class UserController {
     private BookRepository bookRepository;
 
     /**
+     * Busca todos los usuarios
+     *
+     * @return El usuario correspondiente si existe.
+     */
+    @Operation(summary = "Buscar todos los usuarios")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuarios encontrados"),
+            @ApiResponse(responseCode = "404", description = "No hay usuarios creados")
+    })
+    @GetMapping
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    /**
      * Busca un usuario por su ID.
      *
      * @param id ID del usuario a buscar.
