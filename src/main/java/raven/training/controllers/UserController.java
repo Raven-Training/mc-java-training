@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Tag(name = "Users", description = "Operaciones relacionadas con los usuarios del sistema")
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
@@ -32,6 +32,21 @@ public class UserController {
 
     @Autowired
     private BookRepository bookRepository;
+
+    /**
+     * Busca todos los usuarios
+     *
+     * @return El usuario correspondiente si existe.
+     */
+    @Operation(summary = "Buscar todos los usuarios")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuarios encontrados"),
+            @ApiResponse(responseCode = "404", description = "No hay usuarios creados")
+    })
+    @GetMapping
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 
     /**
      * Busca un usuario por su ID.
