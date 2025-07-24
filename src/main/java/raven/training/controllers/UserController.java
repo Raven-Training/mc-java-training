@@ -22,7 +22,7 @@ import java.util.List;
  * Proporciona endpoints para consultar, crear, actualizar y eliminar usuarios,
  * así como para asociar o desasociar libros a un usuario.
  */
-@Tag(name = "User", description = "Operaciones relacionadas con los usuarios del sistema")
+@Tag(name = "Users", description = "Operaciones relacionadas con los usuarios del sistema")
 @RestController
 @RequestMapping("/users")
 public class UserController {
