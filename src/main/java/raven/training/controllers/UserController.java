@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Tag(name = "Users", description = "Operaciones relacionadas con los usuarios del sistema")
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired

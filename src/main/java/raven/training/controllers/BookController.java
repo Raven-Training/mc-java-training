@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Tag(name = "Books", description = "Operaciones relacionadas con libros")
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BookController {
 
     @Autowired
