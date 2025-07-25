@@ -33,7 +33,7 @@ public class UserControllerIntegrationTest {
     public void whenCreatingUser_thenReturn201() throws Exception {
         User newUser = new User("testuser", "password", "Test Name", LocalDate.of(2000, 1, 1), Collections.emptyList());
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newUser)))
                 .andExpect(status().isCreated());
@@ -44,7 +44,7 @@ public class UserControllerIntegrationTest {
         Book newBook = new Book("Terror", "Autor", "Author", "Nuevo libro", "subtitle"
                 ,"publiser", "2024", 100, "qwerty",  new ArrayList<>());
 
-        mockMvc.perform(post("/books")
+        mockMvc.perform(post("/api/books")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newBook)))
                 .andExpect(status().isCreated());
