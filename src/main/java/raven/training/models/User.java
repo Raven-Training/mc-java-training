@@ -27,6 +27,11 @@ public class User {
     @Schema(description = "Nombre de usuario único", example = "miguel123")
     private String userName;
 
+    @Schema(description = "Contraseña de usuario único", example = "uytr")
+    @Column(nullable = true)
+    private String password;
+
+
     @Column(nullable = false)
     @Schema(description = "Nombre completo del usuario", example = "Miguel Ángel Castaño")
     private String name;
@@ -48,7 +53,7 @@ public class User {
     /**
      * Constructor protegido requerido por JPA.
      */
-    protected User() {}
+    public User() {}
 
     /**
      * Constructor para crear manualmente una instancia de User.
@@ -58,8 +63,9 @@ public class User {
      * @param birthDate Fecha de nacimiento del usuario.
      * @param books     Lista de libros asociados al usuario.
      */
-    public User(String userName, String name, LocalDate birthDate, List<Book> books) {
+    public User(String userName, String password,String name, LocalDate birthDate, List<Book> books) {
         this.userName = userName;
+        this.password = password;
         this.name = name;
         this.birthDate = birthDate;
         this.books = books;
@@ -75,6 +81,14 @@ public class User {
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setUserName(String userName) {
