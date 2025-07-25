@@ -14,6 +14,7 @@ import raven.training.models.Book;
 import raven.training.models.User;
 import raven.training.repositories.BookRepository;
 import raven.training.repositories.UserRepository;
+import raven.training.services.UserService;
 
 import java.util.List;
 
@@ -29,6 +30,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private BookRepository bookRepository;
@@ -100,8 +104,11 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
-        return userRepository.save(user);
+        return userService.registerNewUserAccount(user);
     }
+//    public User create(@RequestBody User user) {
+//        return userRepository.save(user);
+//    }
 
     /**
      * Elimina un usuario por su ID.
