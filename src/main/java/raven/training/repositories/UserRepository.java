@@ -1,6 +1,7 @@
 package raven.training.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import raven.training.models.Book;
 import raven.training.models.User;
 
@@ -9,6 +10,7 @@ import raven.training.models.User;
  * Repositorio para la entidad {@link User}.
  * Proporciona operaciones CRUD y una consulta personalizada para buscar usuarios por username
  */
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * Busca un usuario por el nombre del usuario.

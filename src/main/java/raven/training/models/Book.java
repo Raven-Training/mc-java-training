@@ -10,6 +10,7 @@ import java.util.List;
  * Cada libro contiene información bibliográfica y puede estar asociado a múltiples usuarios.
  */
 @Entity
+@Table(name = "book")
 @Schema(description = "Entidad que representa un libro con información bibliográfica.")
 public class Book {
 
@@ -18,6 +19,7 @@ public class Book {
     @Schema(description = "Identificador único del libro", example = "1")
     private Long id;
 
+    @Column(nullable = false)
     @Schema(description = "Género del libro", example = "Ficción")
     private String genre;
 
@@ -41,7 +43,7 @@ public class Book {
     @Schema(description = "Editorial del libro", example = "Editorial Sudamericana")
     private String publisher;
 
-    @Column(nullable = false)
+    @Column(name = "book_year", nullable = false)
     @Schema(description = "Año de publicación", example = "1967")
     private String year;
 
@@ -60,7 +62,7 @@ public class Book {
     /**
      * Constructor protegido requerido por JPA.
      */
-    protected Book() {}
+    public Book() {}
 
     /**
      * Constructor para crear una instancia manual de Book.
