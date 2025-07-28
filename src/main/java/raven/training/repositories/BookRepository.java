@@ -1,12 +1,14 @@
 package raven.training.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import raven.training.models.Book;
 
 /**
  * Repositorio para la entidad {@link Book}.
  * Proporciona operaciones CRUD y una consulta personalizada para buscar libros por autor.
  */
+@Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     /**
      * Busca un libro por el nombre del autor.
