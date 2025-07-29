@@ -6,13 +6,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import raven.training.dtos.OpenLibraryBookDTO;
 import raven.training.models.Book;
 import raven.training.repositories.BookRepository;
 import raven.training.exceptions.BookIdMismatchException;
 import raven.training.exceptions.BookNotFoundException;
+import raven.training.services.OpenLibraryService;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controlador REST para gestionar operaciones CRUD sobre libros.
@@ -25,6 +29,9 @@ public class BookController {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private OpenLibraryService openLibraryService;
 
     /**
      * Obtiene la lista de todos los libros disponibles.
@@ -134,6 +141,35 @@ public class BookController {
         bookRepository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
         return bookRepository.save(book);
+    }
+
+    @PostMapping("/isbn/{isbn}")
+    public ResponseEntity<?> findByIsbn(@PathVariable String isbn) {
+        Optional<Book> localBook = bookRepository.findByIsbn(isbn);
+
+        if (localBook.isPresent()) {
+            return ResponseEntity.ok(localBook.get());
+        }
+
+        Optional<OpenLibraryBookDTO> externalBookOpt = openLibraryService.bookInfo(isbn);
+        if (externalBookOpt.isPresent()) {
+            OpenLibraryBookDTO dto = externalBookOpt.get();
+
+            Book book = new Book();
+            book.setIsbn(dto.getIsbn());
+            book.setTitle(dto.getTitle());
+            book.setSubtitle(dto.getSubtitle());
+            book.setPublisher(String.join(", ", dto.getPublishers()));
+            book.setAuthor(String.join(", ", dto.getAuthors()));
+            book.setYear(dto.getPublishDate());
+            book.setPages(dto.getNumberOfPages());
+            book.setImage(""); // La API no da imagen directa
+
+            bookRepository.save(book);
+            return ResponseEntity.status(HttpStatus.CREATED).body(book);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found in OpenLibrary");
     }
 
 }
