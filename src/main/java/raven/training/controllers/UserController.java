@@ -16,6 +16,7 @@ import raven.training.repositories.BookRepository;
 import raven.training.repositories.UserRepository;
 import raven.training.services.UserService;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -89,6 +90,17 @@ public class UserController {
             throw new UserNotFoundException("User not found with username: " + userName);
         }
         return user;
+    }
+
+    @Operation(summary = "Retornar usuario logueado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Informacion del usuario logueado")
+    })
+    @GetMapping(value = "/username")
+    public User currentUserName(Principal principal) {
+        String name = principal.getName();
+
+        return userRepository.findByUserName(name);
     }
 
     /**
