@@ -19,7 +19,7 @@ public class Book {
     @Schema(description = "Identificador único del libro", example = "1")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Schema(description = "Género del libro", example = "Ficción")
     private String genre;
 

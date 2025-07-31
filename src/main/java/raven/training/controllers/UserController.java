@@ -17,6 +17,7 @@ import raven.training.repositories.UserRepository;
 import raven.training.services.UserService;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -101,6 +102,15 @@ public class UserController {
         String name = principal.getName();
 
         return userRepository.findByUserName(name);
+    }
+
+    @Operation(summary = "Retornar usuario que haga match")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Informacion del usuario")
+    })
+    @GetMapping(value = "/findBetween/{startDate}/{endDate}/{namePart}")
+    public List<User> findByBirthDateBetweenAndNameContainingIgnoreCase(@PathVariable LocalDate startDate, @PathVariable LocalDate endDate,@PathVariable String namePart) {
+        return userRepository.findByBirthDateBetweenAndNameContainingIgnoreCase(startDate,endDate,namePart);
     }
 
     /**
