@@ -86,6 +86,16 @@ public class BookController {
                 .orElseThrow(BookNotFoundException::new);
     }
 
+    @Operation(summary = "Obtener un libro por ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Libro encontrado"),
+            @ApiResponse(responseCode = "404", description = "Libro no encontrado")
+    })
+    @GetMapping("/match/{publisher}/{genre}/{year}")
+    public List<Book> findByPublisherAndGenreAndYear(@PathVariable String publisher,@PathVariable  String genre, @PathVariable String year) {
+        return bookRepository.findByPublisherAndGenreAndYear(publisher,genre,year);
+    }
+
     /**
      * Crea un nuevo libro en el sistema.
      *
@@ -164,6 +174,7 @@ public class BookController {
             book.setYear(dto.getPublishDate());
             book.setPages(dto.getNumberOfPages());
             book.setImage(""); // La API no da imagen directa
+            book.setGenre("Default");
 
             bookRepository.save(book);
             return ResponseEntity.status(HttpStatus.CREATED).body(book);

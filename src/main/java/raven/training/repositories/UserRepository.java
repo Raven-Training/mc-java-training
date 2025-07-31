@@ -5,6 +5,9 @@ import org.springframework.stereotype.Repository;
 import raven.training.models.Book;
 import raven.training.models.User;
 
+import java.time.LocalDate;
+import java.util.List;
+
 
 /**
  * Repositorio para la entidad {@link User}.
@@ -19,5 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return El usuario asociado al userName, o {@code null} si no se encuentra.
      */
     User findByUserName(String userName);
+
+    List<User> findByBirthDateBetweenAndNameContainingIgnoreCase(LocalDate startDate, LocalDate endDate, String namePart);
+
 
 }
