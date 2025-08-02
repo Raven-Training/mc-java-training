@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import raven.training.exceptions.BookNotFoundException;
@@ -111,6 +112,19 @@ public class UserController {
     @GetMapping(value = "/findBetween/{startDate}/{endDate}/{namePart}")
     public List<User> findByBirthDateBetweenAndNameContainingIgnoreCase(@PathVariable LocalDate startDate, @PathVariable LocalDate endDate,@PathVariable String namePart) {
         return userRepository.findByBirthDateBetweenAndNameContainingIgnoreCase(startDate,endDate,namePart);
+    }
+
+    @GetMapping("/search")
+    public List<User> searchUsers(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) String namePart
+    ) {
+        return userRepository.searchUsers(
+                (startDate == null || startDate.isBlank()) ? null : startDate,
+                (endDate == null || endDate.isBlank()) ? null : endDate,
+                (namePart == null || namePart.isBlank()) ? null : namePart
+        );
     }
 
     /**
