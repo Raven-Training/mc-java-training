@@ -96,6 +96,20 @@ public class BookController {
         return bookRepository.findByPublisherAndGenreAndYear(publisher,genre,year);
     }
 
+    @GetMapping("/search")
+    public List<Book> searchBooks(
+            @RequestParam(required = false) String publisher,
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) String year
+    ) {
+        return bookRepository.searchBooks(
+                publisher == null || publisher.isBlank() ? null : publisher,
+                genre == null || genre.isBlank() ? null : genre,
+                year == null || year.isBlank() ? null : year
+        );
+    }
+
+
     /**
      * Crea un nuevo libro en el sistema.
      *
