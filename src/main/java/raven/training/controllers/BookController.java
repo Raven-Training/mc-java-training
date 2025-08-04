@@ -39,11 +39,64 @@ public class BookController {
      * @return una lista de libros.
      */
 
+//    @Operation(summary = "Obtener todos los libros")
+//    @ApiResponse(responseCode = "200", description = "Lista de libros devuelta correctamente")
+//    @GetMapping
+//    public List<Book> findAll() {
+//        return bookRepository.findAll();
+//    }
+
     @Operation(summary = "Obtener todos los libros")
     @ApiResponse(responseCode = "200", description = "Lista de libros devuelta correctamente")
     @GetMapping
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public List<Book> getAllBooks(
+            @RequestParam Optional<String> genre,
+            @RequestParam Optional<String> author,
+            @RequestParam Optional<String> title,
+            @RequestParam Optional<String> subtitle,
+            @RequestParam Optional<String> publisher,
+            @RequestParam Optional<String> year,
+            @RequestParam Optional<Integer> pages,
+            @RequestParam Optional<String> isbn
+    ) {
+        return bookRepository.searchBooksByFilters(
+                genre.filter(s -> !s.isBlank()).orElse(null),
+                author.filter(s -> !s.isBlank()).orElse(null),
+                title.filter(s -> !s.isBlank()).orElse(null),
+                subtitle.filter(s -> !s.isBlank()).orElse(null),
+                publisher.filter(s -> !s.isBlank()).orElse(null),
+                year.filter(s -> !s.isBlank()).orElse(null),
+                pages.orElse(null),
+                isbn.filter(s -> !s.isBlank()).orElse(null)
+        );
+    }
+
+//    public List<Book> getAllBooks(
+//            @RequestParam(required = false) String genre,
+//            @RequestParam(required = false) String author,
+//            @RequestParam(required = false) String title,
+//            @RequestParam(required = false) String subtitle,
+//            @RequestParam(required = false) String publisher,
+//            @RequestParam(required = false) String year,
+//            @RequestParam(required = false) Integer pages,
+//            @RequestParam(required = false) String isbn
+//    ) {
+//        return bookRepository.searchBooksByFilters(
+//                blankToNull(genre),
+//                blankToNull(author),
+//                blankToNull(title),
+//                blankToNull(subtitle),
+//                blankToNull(publisher),
+//                blankToNull(year),
+//                pages,
+//                blankToNull(isbn)
+//        );
+//    }
+
+    // Método utilitario
+    private String blankToNull(String value) {
+        return (value == null || value.isBlank()) ? null : value;
+
     }
 
     /**

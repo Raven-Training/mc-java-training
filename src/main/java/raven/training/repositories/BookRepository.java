@@ -38,6 +38,51 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             @Param("genre") String genre,
             @Param("year") String year
     );
+    @Query("""
+    SELECT b FROM Book b
+    WHERE (:genre IS NULL OR LOWER(b.genre) = LOWER(:genre))
+      AND (:author IS NULL OR LOWER(b.author) = LOWER(:author))
+      AND (:title IS NULL OR LOWER(b.title) = LOWER(:title))
+      AND (:subtitle IS NULL OR LOWER(b.subtitle) = LOWER(:subtitle))
+      AND (:publisher IS NULL OR LOWER(b.publisher) = LOWER(:publisher))
+      AND (:year IS NULL OR b.year = :year)
+      AND (:isbn IS NULL OR b.isbn = :isbn)
+      AND (:pages IS NULL OR b.pages = :pages)
+""")
+    List<Book> searchBooksByFilters(
+            @Param("genre") String genre,
+            @Param("author") String author,
+            @Param("title") String title,
+            @Param("subtitle") String subtitle,
+            @Param("publisher") String publisher,
+            @Param("year") String year,
+            @Param("pages") Integer pages,
+            @Param("isbn") String isbn
+    );
+
+//    @Query("""
+//    SELECT b FROM Book b
+//    WHERE (:genre IS NULL OR LOWER(b.genre) = LOWER(:genre))
+//      AND (:author IS NULL OR LOWER(b.author) = LOWER(:author))
+//      AND (:title IS NULL OR LOWER(b.title) = LOWER(:title))
+//      AND (:subtitle IS NULL OR LOWER(b.subtitle) = LOWER(:subtitle))
+//      AND (:publisher IS NULL OR LOWER(b.publisher) = LOWER(:publisher))
+//      AND (:year IS NULL OR b.year = :year)
+//      AND (:isbn IS NULL OR b.isbn = :isbn)
+//      AND (:pages IS NULL OR b.pages = :pages)
+//""")
+//    List<Book> searchBooksByFilters(
+//            @Param("genre") String genre,
+//            @Param("author") String author,
+//            @Param("title") String title,
+//            @Param("subtitle") String subtitle,
+//            @Param("publisher") String publisher,
+//            @Param("year") String year,
+//            @Param("pages") Integer pages,
+//            @Param("isbn") String isbn
+//    );
+
+
 
 
 }
