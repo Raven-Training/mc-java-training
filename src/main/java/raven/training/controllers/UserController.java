@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,11 @@ import raven.training.services.UserService;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 /**
  * Controlador REST para gestionar operaciones relacionadas con los usuarios del sistema.
@@ -51,7 +57,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "No hay usuarios creados")
     })
     @GetMapping
-    public List<User> findAll() {
+    public List<User> findAll(Pageable pageable) {
         return userRepository.findAll();
     }
 
@@ -115,17 +121,26 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public List<User> searchUsers(
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) String namePart
+    public Page<User> searchUsers(
+            @RequestParam Optional<String> startDate,
+            @RequestParam Optional<String> endDate,
+            @RequestParam Optional<String> namePart,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending
     ) {
-        return userRepository.searchUsers(
-                (startDate == null || startDate.isBlank()) ? null : startDate,
-                (endDate == null || endDate.isBlank()) ? null : endDate,
-                (namePart == null || namePart.isBlank()) ? null : namePart
-        );
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        String cleanedStartDate = startDate.filter(s -> !s.isBlank()).orElse(null);
+        String cleanedEndDate = endDate.filter(s -> !s.isBlank()).orElse(null);
+//        String cleanedNamePart = namePart.filter(s -> !s.isBlank()).orElse(null);
+        String cleanedNamePart = namePart.orElse("");
+        System.out.println("cleanedNamePart: " + cleanedNamePart);
+        return userRepository.searchUsers(cleanedStartDate, cleanedEndDate, cleanedNamePart, pageable);
     }
+
 
     /**
      * Crea un nuevo usuario.

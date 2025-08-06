@@ -5,6 +5,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +53,7 @@ public class BookController {
     @Operation(summary = "Obtener todos los libros")
     @ApiResponse(responseCode = "200", description = "Lista de libros devuelta correctamente")
     @GetMapping
-    public List<Book> getAllBooks(
+    public Page<Book> getAllBooks(
             @RequestParam Optional<String> genre,
             @RequestParam Optional<String> author,
             @RequestParam Optional<String> title,
@@ -57,19 +61,43 @@ public class BookController {
             @RequestParam Optional<String> publisher,
             @RequestParam Optional<String> year,
             @RequestParam Optional<Integer> pages,
-            @RequestParam Optional<String> isbn
+            @RequestParam Optional<String> isbn,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending
     ) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        String cleanedGenre = genre.filter(s -> !s.isBlank()).orElse(null);
+        String cleanedAuthor = author.filter(s -> !s.isBlank()).orElse(null);
+        String cleanedTitle = title.filter(s -> !s.isBlank()).orElse(null);
+        String cleanedSubtitle = subtitle.filter(s -> !s.isBlank()).orElse(null);
+        String cleanedPublisher = publisher.filter(s -> !s.isBlank()).orElse(null);
+        String cleanedYear = year.filter(s -> !s.isBlank()).orElse(null);
+        String cleanedIsbn = isbn.filter(s -> !s.isBlank()).orElse(null);
+        Integer cleanedPages = pages.orElse(null);
+        System.out.printf("genre: %s, author: %s, title: %s, subtitle: %s, publisher: %s, year: %s, isbn: %s, pages: %s%n",
+                cleanedGenre, cleanedAuthor, cleanedTitle, cleanedSubtitle, cleanedPublisher, cleanedYear, cleanedIsbn, cleanedPages);
+
+
+
+
         return bookRepository.searchBooksByFilters(
-                genre.filter(s -> !s.isBlank()).orElse(null),
-                author.filter(s -> !s.isBlank()).orElse(null),
-                title.filter(s -> !s.isBlank()).orElse(null),
-                subtitle.filter(s -> !s.isBlank()).orElse(null),
-                publisher.filter(s -> !s.isBlank()).orElse(null),
-                year.filter(s -> !s.isBlank()).orElse(null),
-                pages.orElse(null),
-                isbn.filter(s -> !s.isBlank()).orElse(null)
+                cleanedGenre,
+                cleanedAuthor,
+                cleanedTitle,
+                cleanedSubtitle,
+                cleanedPublisher,
+                cleanedYear,
+                cleanedIsbn,
+                cleanedPages,
+                pageable
         );
     }
+
 
 //    public List<Book> getAllBooks(
 //            @RequestParam(required = false) String genre,
@@ -150,15 +178,23 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public List<Book> searchBooks(
+    public Page<Book> searchBooks(
             @RequestParam(required = false) String publisher,
             @RequestParam(required = false) String genre,
-            @RequestParam(required = false) String year
+            @RequestParam(required = false) String year,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending
     ) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
         return bookRepository.searchBooks(
                 publisher == null || publisher.isBlank() ? null : publisher,
                 genre == null || genre.isBlank() ? null : genre,
-                year == null || year.isBlank() ? null : year
+                year == null || year.isBlank() ? null : year,
+                pageable
         );
     }
 
