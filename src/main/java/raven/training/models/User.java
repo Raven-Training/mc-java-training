@@ -7,6 +7,9 @@ import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import raven.training.exceptions.BookAlreadyOwnedException;
 
 /**
@@ -17,6 +20,9 @@ import raven.training.exceptions.BookAlreadyOwnedException;
 @Entity
 @Table(name = "users")
 @Schema(description = "Entidad que representa un usuario del sistema.")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -53,7 +59,7 @@ public class User {
     /**
      * Constructor protegido requerido por JPA.
      */
-    public User() {}
+//    public User() {}
 
     /**
      * Constructor para crear manualmente una instancia de User.
@@ -71,46 +77,6 @@ public class User {
         this.books = books;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
 
     /**
      * Devuelve una lista inmodificable de los libros asociados al usuario.
@@ -121,14 +87,9 @@ public class User {
         return Collections.unmodifiableList(books);
     }
 
-    /**
-     * Establece la lista de libros asociados al usuario.
-     *
-     * @param books Nueva lista de libros.
-     */
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
+    //    public void setBooks(List<Book> books) {
+//        this.books = books;
+//    }
 
     /**
      * Asocia un nuevo libro al usuario si aún no lo tiene.
