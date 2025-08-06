@@ -1,5 +1,7 @@
 package raven.training.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,32 +35,58 @@ public interface BookRepository extends JpaRepository<Book, Long> {
       AND (:genre IS NULL OR b.genre = :genre)
       AND (:year IS NULL OR b.year = :year)
 """)
-    List<Book> searchBooks(
+    Page<Book> searchBooks(
             @Param("publisher") String publisher,
             @Param("genre") String genre,
-            @Param("year") String year
+            @Param("year") String year,
+            Pageable pageable
     );
+
     @Query("""
     SELECT b FROM Book b
-    WHERE (:genre IS NULL OR LOWER(b.genre) = LOWER(:genre))
-      AND (:author IS NULL OR LOWER(b.author) = LOWER(:author))
-      AND (:title IS NULL OR LOWER(b.title) = LOWER(:title))
-      AND (:subtitle IS NULL OR LOWER(b.subtitle) = LOWER(:subtitle))
-      AND (:publisher IS NULL OR LOWER(b.publisher) = LOWER(:publisher))
+    WHERE (:genre IS NULL OR b.genre ILIKE CONCAT('%', :genre, '%'))
+      AND (:author IS NULL OR b.author ILIKE CONCAT('%', :author, '%'))
+      AND (:title IS NULL OR b.title ILIKE CONCAT('%', :title, '%'))
+      AND (:subtitle IS NULL OR b.subtitle ILIKE CONCAT('%', :subtitle, '%'))
+      AND (:publisher IS NULL OR b.publisher ILIKE CONCAT('%', :publisher, '%'))
       AND (:year IS NULL OR b.year = :year)
       AND (:isbn IS NULL OR b.isbn = :isbn)
       AND (:pages IS NULL OR b.pages = :pages)
 """)
-    List<Book> searchBooksByFilters(
+    Page<Book> searchBooksByFilters(
             @Param("genre") String genre,
             @Param("author") String author,
             @Param("title") String title,
             @Param("subtitle") String subtitle,
             @Param("publisher") String publisher,
             @Param("year") String year,
+            @Param("isbn") String isbn,
             @Param("pages") Integer pages,
-            @Param("isbn") String isbn
+            Pageable pageable
     );
+
+//    @Query("""
+//    SELECT b FROM Book b
+//    WHERE (:genre IS NULL OR LOWER(b.genre) = LOWER(:genre))
+//      AND (:author IS NULL OR LOWER(b.author) = LOWER(:author))
+//      AND (:title IS NULL OR LOWER(b.title) = LOWER(:title))
+//      AND (:subtitle IS NULL OR LOWER(b.subtitle) = LOWER(:subtitle))
+//      AND (:publisher IS NULL OR LOWER(b.publisher) = LOWER(:publisher))
+//      AND (:year IS NULL OR b.year = :year)
+//      AND (:isbn IS NULL OR b.isbn = :isbn)
+//      AND (:pages IS NULL OR b.pages = :pages)
+//""")
+//    Page<Book> searchBooksByFilters(
+//            @Param("genre") String genre,
+//            @Param("author") String author,
+//            @Param("title") String title,
+//            @Param("subtitle") String subtitle,
+//            @Param("publisher") String publisher,
+//            @Param("year") String year,
+//            @Param("pages") Integer pages,
+//            @Param("isbn") String isbn,
+//            Pageable pageable
+//    );
 
 //    @Query("""
 //    SELECT b FROM Book b
