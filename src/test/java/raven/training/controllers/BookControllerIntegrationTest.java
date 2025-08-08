@@ -29,6 +29,7 @@ import raven.training.models.Book;
 import raven.training.repositories.BookRepository;
 import raven.training.repositories.UserRepository;
 import raven.training.security.SecurityConfig;
+import raven.training.services.OpenLibraryService;
 import raven.training.services.UserService;
 
 import java.util.*;
@@ -46,6 +47,9 @@ public class BookControllerIntegrationTest {
 
     @MockitoBean
     private UserRepository userRepository;
+
+    @MockitoBean
+    private OpenLibraryService openLibraryService;
 
     @MockitoBean
     private BookRepository bookRepository;
